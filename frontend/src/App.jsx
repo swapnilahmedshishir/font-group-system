@@ -48,11 +48,11 @@ const App = () => {
       const formData = new FormData();
       formData.append("fontFile", file);
 
-      fetch("http://localhost:8000/upload.php", {
+      fetch("http://localhost:5000/api/upload", {
         method: "POST",
         body: formData,
       })
-        .then((response) => response.json())
+        .then((res) => res.json())
         .then((data) => {
           if (data.status === "success") {
             const font = {
@@ -168,13 +168,21 @@ const App = () => {
   };
 
   // Handle edit group and clear cache
-  const handleEditGroup = (groupId) => {
-    const groupToEdit = fontGroups.find((group) => group.id === groupId);
-    setSelectedFonts(groupToEdit.fonts); // Load fonts into the form to edit
-    handleDeleteGroup(groupId); // Remove the old group before editing
+  // const handleEditGroup = (groupId, updatedFonts) => {
+  //   const groupToEdit = fontGroups.find((group) => group.id === groupId);
+  //   setSelectedFonts(groupToEdit.fonts); // Load fonts into the form to edit
+  //   handleDeleteGroup(groupId); // Remove the old group before editing
 
-    // Clear the cache after editing
-    localStorage.removeItem("fontGroups");
+  //   // Clear the cache after editing
+  //   localStorage.removeItem("fontGroups");
+  // };
+
+  const handleEditGroup = (groupId, updatedFonts) => {
+    setFontGroups((prevGroups) =>
+      prevGroups.map((group) =>
+        group.id === groupId ? { ...group, fonts: updatedFonts } : group
+      )
+    );
   };
 
   return (
